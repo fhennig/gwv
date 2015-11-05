@@ -95,17 +95,20 @@ def search(field, dequeue_fn):
     indem unterschiedliche Strategien zum bestimmen des nächsten Pfades
     angegeben werden"""
     expand_counter = 0
+    frontier_size_counter = 0
     v_matrix = visited_matrix(field)
     frontier = [[get_start(field)]]
     while len(frontier) != 0:
         path = dequeue_fn(frontier)
         if is_goal(field, *path[-1]):
-            return (path, v_matrix, expand_counter)
+            return path, v_matrix, expand_counter, frontier_size_counter
         if not is_discovered(v_matrix, *path[-1]):
             set_discovered(field, v_matrix, *path[-1])
-            frontier += get_next_paths(field, path)
+            next_paths = get_next_paths(field, path)
+            frontier += next_paths
+            frontier_size_counter += len(next_paths)
             expand_counter += 1
-    return ([], v_matrix, expand_counter)
+    return [], v_matrix, expand_counter, frontier_size_counter
 
 
 def dfs(field):
@@ -172,6 +175,7 @@ def priority_with_portals(field, path):
 
 def a_star(field):
     expand_counter = 0
+    frontier_size_counter = 0
     v_matrix = visited_matrix(field)
     frontier = []
     init_path = [get_start(field)]
@@ -179,13 +183,15 @@ def a_star(field):
     while(len(frontier) != 0):
         _, path = heappop(frontier)
         if is_goal(field, *path[-1]):
-            return (path, v_matrix, expand_counter)
+            return path, v_matrix, expand_counter, frontier_size_counter
         if not is_discovered(v_matrix, *path[-1]):
             set_discovered(field, v_matrix, *path[-1])
-            for p in get_next_paths(field, path):
+            next_paths = get_next_paths(field, path)
+            for p in next_paths:
                 heappush(frontier, (priority_with_portals(field, p), p))
+            frontier_size_counter += len(next_paths)
             expand_counter += 1
-    return ([], v_matrix, expand_counter)
+    return [], v_matrix, expand_counter, frontier_size_counter
 
 
 # 1.  Als Heuristik verwenden wir die Manhattan-Distance, da diese in
@@ -212,8 +218,11 @@ def path_to_string(field, v_matrix, path):
 
 
 def show_alg_info(field, alg):
-    path, v_matrix, expand_counter = alg(field)
-    print(alg.__name__ + ":", "expansions:", expand_counter, "path length:", len(path))
+    path, v_matrix, expand_counter, f_s_counter = alg(field)
+    print(alg.__name__ + ":",
+          "path length:", len(path),
+          "expansions:", expand_counter,
+          "frontier_size:", f_s_counter)
     print(path_to_string(field, v_matrix, path))
     
 
