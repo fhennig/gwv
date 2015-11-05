@@ -1,7 +1,7 @@
 from sys import argv
-from time import time
 from heapq import heappop, heappush
 
+s_empty   = ' '
 s_start   = 's'
 s_goal    = 'g'
 s_wall    = 'x'
@@ -9,41 +9,52 @@ s_path    = 'o'
 s_visited = '.'
 s_portal  = '0123456789'
 
-# Läd das Spielfeld aus der angegebenen Datei in ein mehrdimensionales Array
+
 def get_field(filename):
+    """Läd das Spielfeld aus der angegebenen Datei in ein mehrdimensionales Array"""
     with open(filename) as f:
         return f.readlines()
 
+
 def visited_matrix(field):
     return [[False for cell in row] for row in field]
+
 
 def get_positions(field, chars):
     return sum([[(x, y) for x, char in enumerate(row)
                  if char in chars]
                 for y, row in enumerate(field)], [])
 
+
 def get_start(field):
     """Gibt die Startposition als [x, y] zurück"""
     return get_positions(field, s_start)[0]
 
+
 def get_goals(field):
     """Gibt eine Liste aller Zielkoordinaten auf dem Feld zurück"""
     return get_positions(field, s_goal)
-        
+
+
 def is_goal(field, x, y):
     return field[y][x] == s_goal
+
 
 def get_portals(field, number):
     return get_positions(field, number)
 
+
 def is_portal(field, x, y):
     return field[y][x] in s_portal
+
 
 def is_walkable(field, x, y):
     return field[y][x] != s_wall
 
+
 def is_discovered(v_matrix, x, y):
     return v_matrix[y][x]
+
 
 def set_discovered(field, v_matrix, x, y):
     if is_portal(field, x, y):
@@ -53,6 +64,7 @@ def set_discovered(field, v_matrix, x, y):
     for x, y in coords:
         v_matrix[y][x] = True
 
+        
 def four_neighbors(field, x, y):
     """Vierer-Nachbarschaft"""
     return [[x + 1, y],
@@ -60,9 +72,10 @@ def four_neighbors(field, x, y):
             [x - 1, y],
             [x, y - 1]]
 
+
 def neighbors(field, x, y):
     """Gibt die Nachbarn zu einem gegebenen Feld zurück, normalerweise 4
-Nachbarn, bei Portalen auch mehr."""
+    Nachbarn, bei Portalen auch mehr."""
     if is_portal(field, x, y):
         coords = get_portals(field, field[y][x])
     else:
@@ -71,13 +84,15 @@ Nachbarn, bei Portalen auch mehr."""
     
 
 def get_next_paths(field, path):
+    """Expandiert den gegebenen Pfad um 1, auf alle möglichen Nachbarpfade"""
     ns = neighbors(field, *path[-1])
     return [path + [n] for n in ns if is_walkable(field, *n)]
 
-# generische Suchfunktion, unterschiedliches Verhalten wird erzeugt
-# indem unterschiedliche Strategien zum bestimmen des nächsten Pfades
-# angegeben werden
+
 def search(field, dequeue_fn):
+    """generische Suchfunktion, unterschiedliches Verhalten wird erzeugt
+    indem unterschiedliche Strategien zum bestimmen des nächsten Pfades
+    angegeben werden"""
     expand_counter = 0
     v_matrix = visited_matrix(field)
     frontier = [[get_start(field)]]
@@ -91,21 +106,26 @@ def search(field, dequeue_fn):
             expand_counter += 1
     return ([], v_matrix, expand_counter)
 
+
 def dfs(field):
     return search(field, lambda l: l.pop()) # top des stacks entfernen
+
 
 def bfs(field):
     return search(field, lambda l: l.pop(0)) # erstes element der queue entfernen
 
+
 # A star
+
 
 def manhattan_distance(x1, y1, x2, y2):
     """Manhattan Abstand, definiert für die Heuristik"""
     return abs(x2 - x1) + abs(y2 - y1)
 
+
 def min_dist(start_list, goal_list):
     """Gibt die kürzeste Distanz zwischen irgendeinem Punkt aus der ersten
-und irgendeinem Punkt aus der zweiten Liste zurück"""
+    und irgendeinem Punkt aus der zweiten Liste zurück"""
     return min([manhattan_distance(xs, ys, xg, yg)
                 for xs, ys in start_list
                 for xg, yg in goal_list])
@@ -126,6 +146,7 @@ def estimate_distance_to_nearest_goal(field, x, y):
 def priority(field, path):
     return len(path) + estimate_distance_to_nearest_goal(field, *path[-1])
 
+
 def a_star(field):
     expand_counter = 0
     v_matrix = visited_matrix(field)
@@ -143,6 +164,7 @@ def a_star(field):
             expand_counter += 1
     return ([], v_matrix, expand_counter)
 
+
 # 1.  Als Heuristik verwenden wir die Manhattan-Distance, da diese in
 #     unserer Umgebung eine bessere Abschätzung als die euklidische
 #     Distanz darstellt.
@@ -152,31 +174,25 @@ def a_star(field):
 #     es auch keine Lösung gibt.
 
 
-
-# Gibt das Feld aus, mit dem gegebenen Pfad eingezeichnet
 def path_to_string(field, v_matrix, path):
+    """Gibt das Feld aus, mit dem gegebenen Pfad eingezeichnet"""
     str = ''
     for y, row in enumerate(field):
         for x, cell in enumerate(row):
-            if [x, y] in path[1:-1]:
+            if [x, y] in path and cell == s_empty:
                 str += s_path
-            elif v_matrix[y][x] and cell == ' ':
+            elif v_matrix[y][x] and cell == s_empty:
                 str += s_visited
             else:
                 str += cell
     return str
 
+
 def show_alg_info(field, alg):
-    s_time = time()
     path, v_matrix, expand_counter = alg(field)
-    e_time = time()
-    duration = e_time - s_time
-    visited_nodes = len(sum([[b for b in row if b] for row in v_matrix], []))
-    print(alg.__name__, expand_counter, "expansions", visited_nodes, "visited nodes")
+    print(alg.__name__, expand_counter, "expansions")
     print(path_to_string(field, v_matrix, path))
     
-
-
 
 if __name__ == '__main__' and len(argv) == 2:
     # Aufruf über 'python <script-File> <Feld-File>' (Python 3)
