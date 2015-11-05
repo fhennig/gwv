@@ -1,5 +1,6 @@
-from sys import argv
-from heapq import heappop, heappush
+from sys import argv # filename as argument
+from heapq import heappop, heappush # priority queue
+import itertools as it # combinatorics
 
 s_empty   = ' '
 s_start   = 's'
@@ -129,9 +130,27 @@ def min_dist(start_list, goal_list):
     return min([manhattan_distance(xs, ys, xg, yg)
                 for xs, ys in start_list
                 for xg, yg in goal_list])
-            
 
-def estimate_distance_to_nearest_goal(field, x, y):
+
+def est_dist_to_nearest_goal_with_portals(field, x, y):
+    """Man muss alle wege zum allen zielen betrachten, in denen man durch
+    jedes Portal entweder durchgeht oder nicht, und jede Reihenfolge der
+    Portale. Anzahl der zu Testenden Pfade: |G| * 2^|P| * |P|!"""
+    goals = get_goals(field)
+    dists = []
+    portal_seqs = []
+    portal_coords = [get_portals(field, n) for n in s_portal]
+    portal_coords = filter(lambda l: len(l) != 0, portal_coords)
+    for perm in it.permutations(portal_coords): # Alle RHF der Portale
+        for i in range(len(perm) + 1):
+            for c in it.combinations(perm, i):  # Alle Möglichkeiten ein
+                l = [[(x, y)]] + list(c) + [goals]
+                dists.append(sum([min_dist(l[i-1], l[i]) for i in range(1, len(l))]))
+    return min(dists)
+
+
+# Problem: Berücksichtigt nur 1 Portal auf dem Pfad
+def est_dist_to_nearest_goal(field, x, y):
     dists = [] # Liste mit möglichen kürzesten Pfaden
     goals = get_goals(field)
     for p_number in s_portal:
@@ -144,7 +163,11 @@ def estimate_distance_to_nearest_goal(field, x, y):
 
                  
 def priority(field, path):
-    return len(path) + estimate_distance_to_nearest_goal(field, *path[-1])
+    return len(path) + est_dist_to_nearest_goal(field, *path[-1])
+
+
+def priority_with_portals(field, path):
+    return len(path) + est_dist_to_nearest_goal_with_portals(field, *path[-1])
 
 
 def a_star(field):
@@ -152,7 +175,7 @@ def a_star(field):
     v_matrix = visited_matrix(field)
     frontier = []
     init_path = [get_start(field)]
-    heappush(frontier, (priority(field, init_path), init_path))
+    heappush(frontier, (priority_with_portals(field, init_path), init_path))
     while(len(frontier) != 0):
         _, path = heappop(frontier)
         if is_goal(field, *path[-1]):
@@ -160,7 +183,7 @@ def a_star(field):
         if not is_discovered(v_matrix, *path[-1]):
             set_discovered(field, v_matrix, *path[-1])
             for p in get_next_paths(field, path):
-                heappush(frontier, (priority(field, p), p))
+                heappush(frontier, (priority_with_portals(field, p), p))
             expand_counter += 1
     return ([], v_matrix, expand_counter)
 
@@ -190,7 +213,7 @@ def path_to_string(field, v_matrix, path):
 
 def show_alg_info(field, alg):
     path, v_matrix, expand_counter = alg(field)
-    print(alg.__name__, expand_counter, "expansions")
+    print(alg.__name__ + ":", "expansions:", expand_counter, "path length:", len(path))
     print(path_to_string(field, v_matrix, path))
     
 
