@@ -1,0 +1,153 @@
+-------------------------------
+field:  blatt4_environment_a.txt
+
+dfs: path length: 0 expansions: 99 frontier_size: 300
+xxxxxxxxxxxxxxxxxxxx
+x..................x
+x.......xxx........x
+x.......x.xxxxx....x
+x...s.....x........x
+x.......x.x..xxxxxxx
+x..xx.xxxxx..x     x
+x......x.....xg    x
+x......x.....x     x
+xxxxxxxxxxxxxxxxxxxx
+
+bfs: path length: 0 expansions: 99 frontier_size: 300
+xxxxxxxxxxxxxxxxxxxx
+x..................x
+x.......xxx........x
+x.......x.xxxxx....x
+x...s.....x........x
+x.......x.x..xxxxxxx
+x..xx.xxxxx..x     x
+x......x.....xg    x
+x......x.....x     x
+xxxxxxxxxxxxxxxxxxxx
+
+a_star: path length: 0 expansions: 99 frontier_size: 300
+xxxxxxxxxxxxxxxxxxxx
+x..................x
+x.......xxx........x
+x.......x.xxxxx....x
+x...s.....x........x
+x.......x.x..xxxxxxx
+x..xx.xxxxx..x     x
+x......x.....xg    x
+x......x.....x     x
+xxxxxxxxxxxxxxxxxxxx
+
+-------------------------------
+field:  blatt4_environment_b.txt
+
+dfs: path length: 51 expansions: 80 frontier_size: 255
+xxxxxxxxxxxxxxxxxxxx
+x2o....ooooooooo   x
+x o....oxxxooooo   x
+x o.1..ox.xxxxxo   x
+x o.s..ooooooooo   x
+x o.....x xooxxxxxxx
+x oxx.xxxxxoooo    x
+x ooo..x..oooog    x
+x   1..x..2.oo     x
+xxxxxxxxxxxxxxxxxxxx
+
+bfs: path length: 12 expansions: 83 frontier_size: 260
+xxxxxxxxxxxxxxxxxxxx
+x2...........      x
+xo......xxx.       x
+xo..1...x.xxxxx    x
+xooos...........   x
+x.......x.x..xxxxxxx
+x..xx.xxxxx...     x
+x......x......g    x
+x...1..x..2oooo.   x
+xxxxxxxxxxxxxxxxxxxx
+
+a_star: path length: 12 expansions: 11 frontier_size: 41
+xxxxxxxxxxxxxxxxxxxx
+x2                 x
+xo      xxx        x
+xo  1   x xxxxx    x
+xooos              x
+x       x x  xxxxxxx
+x  xx xxxxx        x
+x      x  oooog    x
+x   1  x  2        x
+xxxxxxxxxxxxxxxxxxxx
+
+-------------------------------
+field:  feld/feld_mehrere_goals.txt
+
+dfs: path length: 592 expansions: 593 frontier_size: 2311
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xoooooooooooooooooooooooooooooo            x               x
+xoooooooooooooooooooooooooooooo        g   x   1     2     x
+xooooosoooooooooooooooooooooooo            x               x
+xoooooooooooooooooooooooooooooo            x               x
+xoooooooooooooooooooooooooooooo            x               x
+xoooooooooooooooooooooooooooooo                            x
+xxoo1oooooooooooooooooooooooooo                            x
+xoooooooooooooooooooooooooooooo                            x
+xoooooooooooooooooooooooooooooo                       34   x
+xoooooooooooooooooooooooooooooo                            x
+xoooooooooooooooooooooooooooooo                            x
+xoooooooooooooooooooooooooooooo                            x
+xooooooooooooooooooooooooooo13o                            x
+xoooooooooooooooooooooooooooooo                  2         x
+xoooooooooooooooooooooooooooooo                            x
+xooooooooooooooooooooooooooooo                             x
+xooooooooooooooooooooooooooooo                             x
+xooooooooooooooooooooooooo2ooo                             x
+xooooooooooooooooooooooooooooo                             x
+xoooooooooooo.oooooooo.ooooooog  4                         x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+bfs: path length: 12 expansions: 275 frontier_size: 1071
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x...............                           x........       x
+x................                      g   x...1.....2     x
+x.....s...........                         x........       x
+x.....o..........                          x.......        x
+x.....o.........                           x .....         x
+x.....o........                               ...     ..   x
+xx..1oo.......                                 .     ....  x
+x............                                       ...... x
+x...........                .                      ...34...x
+x .........                ...                      ...... x
+x  .......                .....                      ....  x
+x   .....                .......                      ..   x
+x    ...                ....13...                          x
+x     .                  .......                 2         x
+x                         .....                            x
+x                          ...                             x
+x                           .                              x
+x                         2      ..                        x
+x                               ....                       x
+x                             goo4...                      x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+a_star: path length: 12 expansions: 11 frontier_size: 57
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x                                          x               x
+x                                      g   x   1     2     x
+x   oos                                    x               x
+x   o                                      x               x
+x   o                                      x               x
+x   o                                                      x
+xx  1                                                      x
+x                                                          x
+x                                                     34   x
+x                                                          x
+x                                                          x
+x                                                          x
+x                           13                             x
+x                                                2         x
+x                                                          x
+x                                                          x
+x                                                          x
+x                         2                                x
+x                                                          x
+x                             goo4                         x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
