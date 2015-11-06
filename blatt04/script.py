@@ -1,6 +1,7 @@
-from sys import argv # filename as argument
-from heapq import heappop, heappush # priority queue
-import itertools as it # combinatorics
+#! /usr/bin/env python3
+from sys import argv                  # filename as argument
+from heapq import heappop, heappush   # priority queue
+import itertools as it                # combinatorics
 
 s_empty   = ' '
 s_start   = 's'
@@ -224,12 +225,18 @@ def show_alg_info(field, alg):
           "expansions:", expand_counter,
           "frontier_size:", f_s_counter)
     print(path_to_string(field, v_matrix, path))
+
+
+def main():
+    if len(argv) != 2:
+        print("requires 1 argument (filename)")
+    else:
+        _, filename  = argv
+        field = get_field(filename)
+        show_alg_info(field, dfs)
+        show_alg_info(field, bfs)
+        show_alg_info(field, a_star)
     
 
-if __name__ == '__main__' and len(argv) == 2:
-    # Aufruf über 'python <script-File> <Feld-File>' (Python 3)
-    _, filename  = argv
-    field = get_field(filename)
-    show_alg_info(field, dfs)
-    show_alg_info(field, bfs)
-    show_alg_info(field, a_star)
+if __name__ == '__main__':
+    main()
